@@ -1,5 +1,4 @@
 DELIMITER //
-
 CREATE PROCEDURE AdmitPatient(
     IN p_fname VARCHAR(50),
     IN p_lname VARCHAR(50),
@@ -20,8 +19,8 @@ BEGIN
     SET new_patient_id = LAST_INSERT_ID();
 
     -- 3. Create the Emergency Case
-    INSERT INTO emergency_cases (PATIENT_ID, DOCTOR_ID, ROOM_ID, TRIAGE_LEVEL, CASE_STATUS, DATE_ISSUED)
-    VALUES (new_patient_id, p_doctor_id, p_room_id, p_triage, 'Admitted', CURDATE());
+    INSERT INTO emergency_cases (PATIENT_ID, DOCTOR_ID, TRIAGE_LEVEL, CASE_STATUS, DATE_ISSUED)
+    VALUES (new_patient_id, p_doctor_id, p_triage, 'Admitted', CURDATE());
 
     -- NOTE: Member 2's Trigger will automatically set the room to 'Occupied' now!
 END //
@@ -29,9 +28,8 @@ END //
 DELIMITER ;
 
 DELIMITER //
-
 CREATE PROCEDURE CreatePrescription(
-    IN p_case_id INT,
+	IN p_patient_id INT,
     IN p_doctor_id INT,
     IN p_med_id INT,
     IN p_dosage VARCHAR(50),
@@ -41,8 +39,8 @@ BEGIN
     DECLARE new_presc_id INT;
 
     -- 1. Create the main Prescription record
-    INSERT INTO prescriptions (CASE_ID, DOCTOR_ID, PRESCRIPTION_DATE)
-    VALUES (p_case_id, p_doctor_id, CURDATE());
+    INSERT INTO prescriptions (PATIENT_ID ,DOCTOR_ID, PRESCRIPTION_DATE)
+    VALUES (p_patient_id , p_doctor_id, CURDATE());
 
     SET new_presc_id = LAST_INSERT_ID();
 
